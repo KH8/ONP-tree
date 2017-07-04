@@ -3,6 +3,7 @@ const path = require('path');
 const url = require('url');
 
 global.args = require('./utils/args').acquire();
+var devTools = global.args.devTools;
 
 let mainWindow;
 
@@ -15,7 +16,7 @@ function createWindow() {
         slashes: true
     }));
 
-    if (global.args.devTools) {
+    if (devTools) {
         mainWindow.webContents.openDevTools();
     }
 
