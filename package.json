@@ -1,0 +1,9 @@
+{
+    "name": "tree",
+    "version": "0.1.0",
+    "main": "app.js",
+    "dependencies": {
+        "electron": "^1.6.11",
+        "yargs": "^8.0.2"
+    }
+}
