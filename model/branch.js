@@ -3,21 +3,30 @@ const Point = require('./point');
 const SUB_BRANCH_MINIMAL_LENGTH = 50;
 const SUB_BRANCH_REF_POSITION = 0.7;
 const SUB_BRANCH_REF_DIR = 0.1;
+const GROWTH_SPEED = 0.5;
 
-function Branch(origin, direction) {
+function Branch(origin, angle) {
     this.origin = origin;
     this.length = 1;
-    this.direction = direction || 0.5;
+    this.angle = angle || 0.5;
     this.subBranches = {};
+
+    function transformX(x, l, a) {
+        return x + -1 * l * Math.cos(Math.PI * a);
+    }
+
+    function transformY(y, l, a) {
+        return y + -1 * l * Math.sin(Math.PI * a);
+    }
 
     this.calculateEndingPoint = function() {
         return new Point(
-            this.origin.x + -1 * this.length * Math.cos(Math.PI * this.direction),
-            this.origin.y + -1 * this.length * Math.sin(Math.PI * this.direction));
+            transformX(this.origin.x, this.length, this.angle),
+            transformY(this.origin.y, this.length, this.angle));
     };
 
     this.incrementLength = function() {
-        this.length++;
+        this.length += GROWTH_SPEED;
     };
 
     this.propagateGrowth = function() {
@@ -33,13 +42,13 @@ function Branch(origin, direction) {
         if (this.length === SUB_BRANCH_MINIMAL_LENGTH) {
             this.subBranches = {
                 right: new Branch(new Point(
-                        this.origin.x + -1 * this.length * SUB_BRANCH_REF_POSITION * Math.cos(Math.PI * (this.direction)),
-                        this.origin.y + -1 * this.length * SUB_BRANCH_REF_POSITION * Math.sin(Math.PI * (this.direction))),
-                    this.direction - SUB_BRANCH_REF_DIR),
+                        transformX(this.origin.x, this.length * SUB_BRANCH_REF_POSITION, this.angle),
+                        transformY(this.origin.y, this.length * SUB_BRANCH_REF_POSITION, this.angle)),
+                    this.angle - SUB_BRANCH_REF_DIR),
                 left: new Branch(new Point(
-                        this.origin.x + -1 * this.length * SUB_BRANCH_REF_POSITION * Math.cos(Math.PI * (this.direction)),
-                        this.origin.y + -1 * this.length * SUB_BRANCH_REF_POSITION * Math.sin(Math.PI * (this.direction))),
-                    this.direction + SUB_BRANCH_REF_DIR),
+                        transformX(this.origin.x, this.length * SUB_BRANCH_REF_POSITION, this.angle),
+                        transformY(this.origin.y, this.length * SUB_BRANCH_REF_POSITION, this.angle)),
+                    this.angle + SUB_BRANCH_REF_DIR),
             };
         }
     };
