@@ -30,4 +30,4 @@ function draw(branch) {
 setInterval(function() {
     b1.grow();
     draw(b1);
-}, 50);
+}, 100);
